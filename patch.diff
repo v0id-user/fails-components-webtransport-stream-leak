@@ -1,5 +1,5 @@
 diff --git a/main/lib/stream.js b/main/lib/stream.js
-index 1f27f44..4b68e9d 100644
+index 1f27f44..f960f61 100644
 --- a/main/lib/stream.js
 +++ b/main/lib/stream.js
 @@ -106,6 +106,7 @@ export class HttpWTStream {
@@ -26,7 +26,7 @@ index 1f27f44..4b68e9d 100644
              /** @type {Promise<void>} */
              // eslint-disable-next-line no-unused-vars
              const promise = new Promise((resolve, reject) => {
-@@ -330,10 +333,24 @@ export class HttpWTStream {
+@@ -330,10 +333,20 @@ export class HttpWTStream {
          this.readableController.close()
          this.readableclosed = true
        }
@@ -37,11 +37,7 @@ index 1f27f44..4b68e9d 100644
      return retObj
    }
  
-+  /**
-+   * Drops this stream from the session's stream set once both halves are
-+   * closed, so the session stops referencing it. Without this, every stream
-+   * that ends by close and fin stays reachable until the session closes.
-+   */
++  /** Removes this stream from the session once both halves are closed. */
 +  removeStreamObjIfFinished() {
 +    if (this.readable && !this.readableclosed) return
 +    if (this.writable && !this.writableclosed) return
@@ -51,7 +47,7 @@ index 1f27f44..4b68e9d 100644
    updateSendOrderAndGroup() {
      this.objint.updateSendOrderAndGroup({
        sendOrder: this._sendOrder,
-@@ -397,6 +414,7 @@ export class HttpWTStream {
+@@ -397,6 +410,7 @@ export class HttpWTStream {
        default:
          log.error('unhandled onStreamRecvSignal')
      }
@@ -60,36 +56,32 @@ index 1f27f44..4b68e9d 100644
      if (this.pendingoperation) {
        const res = this.pendingres
 diff --git a/test/bidirectional-streams.spec.js b/test/bidirectional-streams.spec.js
-index b66989c..8a4f882 100644
+index b66989c..d7c64f3 100644
 --- a/test/bidirectional-streams.spec.js
 +++ b/test/bidirectional-streams.spec.js
-@@ -249,4 +249,27 @@ describe('bidirectional streams', function () {
+@@ -249,4 +249,23 @@ describe('bidirectional streams', function () {
        }
      }
    })
 +
-+  it('lets the session forget a bidirectional stream once both sides closed it', async () => {
-+    // client context - opens several streams on one session, closes each on both
-+    // sides and checks that the session no longer references any of them
-+    client = new WebTransport(
-+      `${process.env.SERVER_URL}/bidirectional_client_initiated_echo_all`,
-+      wtOptions
-+    )
-+    await client.ready
-+    // @ts-ignore sessionint is the node implementation's session object
-+    const session = client.sessionint
-+    if (session == null) {
-+      console.log('session object not reachable, skipping')
-+      return
-+    }
-+    for (let i = 0; i < 10; i++) {
-+      const stream = await client.createBidirectionalStream()
-+      await writeStream(stream.writable, KNOWN_BYTES)
-+      const output = await readStream(stream.readable)
-+      expect(ui8.concat(KNOWN_BYTES)).to.deep.equal(ui8.concat(output))
-+    }
-+    expect(session.streamObjs.size).to.equal(0)
-+  })
++  if (!browser) {
++    it('lets the session forget a bidirectional stream once both sides closed it', async () => {
++      client = new WebTransport(
++        `${process.env.SERVER_URL}/bidirectional_client_initiated_echo_all`,
++        wtOptions
++      )
++      await client.ready
++      // @ts-expect-error sessionint is the node implementation's session object
++      const session = client.sessionint
++      for (let i = 0; i < 10; i++) {
++        const stream = await client.createBidirectionalStream()
++        await writeStream(stream.writable, KNOWN_BYTES)
++        const output = await readStream(stream.readable)
++        expect(ui8.concat(KNOWN_BYTES)).to.deep.equal(ui8.concat(output))
++      }
++      expect(session.streamObjs.size).to.equal(0)
++    })
++  }
  })
 diff --git a/test/fixtures/server.js b/test/fixtures/server.js
 index 51d0d99..59c0191 100644
@@ -135,32 +127,36 @@ index 51d0d99..59c0191 100644
            async () => {
              for await (const session of getReaderStream(
 diff --git a/test/unidirectional-streams.spec.js b/test/unidirectional-streams.spec.js
-index f2eee45..29fbb69 100644
+index f2eee45..2e16306 100644
 --- a/test/unidirectional-streams.spec.js
 +++ b/test/unidirectional-streams.spec.js
-@@ -130,4 +130,25 @@ describe('unidirectional streams', function () {
+@@ -13,6 +13,7 @@ import { quicheLoaded } from './fixtures/quiche.js'
+ describe('unidirectional streams', function () {
+   /** @type {import('../lib/dom').WebTransport | undefined} */
+   let client
++  const browser = process.env.BROWSER
+   let forceReliable = false
+   if (process.env.USE_HTTP2 === 'true') forceReliable = true
+ 
+@@ -130,4 +131,21 @@ describe('unidirectional streams', function () {
      // expect(result).to.have.property('reason', '')
      // expect(result).to.have.property('closeCode', 0)
    })
 +
-+  it('lets the session forget a unidirectional stream once it is closed', async () => {
-+    // client context - opens several streams on one session, closes each and
-+    // checks that the session no longer references any of them
-+    client = new WebTransport(
-+      `${process.env.SERVER_URL}/unidirectional_client_send_all`,
-+      wtOptions
-+    )
-+    await client.ready
-+    // @ts-ignore sessionint is the node implementation's session object
-+    const session = client.sessionint
-+    if (session == null) {
-+      console.log('session object not reachable, skipping')
-+      return
-+    }
-+    for (let i = 0; i < 10; i++) {
-+      const stream = await client.createUnidirectionalStream()
-+      await writeStream(stream, KNOWN_BYTES)
-+    }
-+    expect(session.streamObjs.size).to.equal(0)
-+  })
++  if (!browser) {
++    it('lets the session forget a unidirectional stream once it is closed', async () => {
++      client = new WebTransport(
++        `${process.env.SERVER_URL}/unidirectional_client_send_all`,
++        wtOptions
++      )
++      await client.ready
++      // @ts-expect-error sessionint is the node implementation's session object
++      const session = client.sessionint
++      for (let i = 0; i < 10; i++) {
++        const stream = await client.createUnidirectionalStream()
++        await writeStream(stream, KNOWN_BYTES)
++      }
++      expect(session.streamObjs.size).to.equal(0)
++    })
++  }
  })
