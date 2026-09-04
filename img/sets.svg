@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="640" viewBox="0 0 1400 640" font-family="system-ui,-apple-system,'Segoe UI',sans-serif">
+<style>
+.h{font-size:15px;fill:#0b0b0b;font-weight:600}.t{font-size:13px;fill:#0b0b0b}.m{font-size:12px;fill:#52514e}.code{font-family:ui-monospace,Menlo,monospace;font-size:12px;fill:#0b0b0b}
+.yes{fill:#2a78d6}.no{fill:#fff;stroke:#e34948;stroke-width:2}.fix{fill:none;stroke:#1baf7a;stroke-width:2;stroke-dasharray:5 4}
+.line{stroke:#e6e5e1}.hdr{fill:#f2f1ee;stroke:#d6d5d0}
+</style>
+<rect width="1400" height="640" fill="#fcfcfb"/>
+<text x="24" y="30" class="h">HttpWTSession holds five Sets. Which of them let go of a stream, and when.</text>
+<text x="24" y="50" class="m">@fails-components/webtransport 1.6.7, lib/stream.js and lib/session.js. A filled dot means the event removes the stream from that Set.</text>
+
+<!-- column headers: x0 = 560, width 128, gap 4 -->
+<g class="code">
+<rect x="560" y="70" width="128" height="52" class="hdr"/><text x="624" y="92" text-anchor="middle">sendStreams</text><text x="624" y="110" text-anchor="middle" class="m">Set of writables</text>
+<rect x="692" y="70" width="128" height="52" class="hdr"/><text x="756" y="92" text-anchor="middle">sendStreams</text><text x="756" y="110" text-anchor="middle">Controller</text>
+<rect x="824" y="70" width="128" height="52" class="hdr"/><text x="888" y="92" text-anchor="middle">receiveStreams</text><text x="888" y="110" text-anchor="middle" class="m">Set of readables</text>
+<rect x="956" y="70" width="128" height="52" class="hdr"/><text x="1020" y="92" text-anchor="middle">receiveStreams</text><text x="1020" y="110" text-anchor="middle">Controller</text>
+<rect x="1088" y="70" width="140" height="52" class="hdr"/><text x="1158" y="92" text-anchor="middle" font-weight="700">streamObjs</text><text x="1158" y="110" text-anchor="middle" class="m">Set of HttpWTStream</text>
+</g>
+
+<!-- row labels: row centres 166,218,270,322,374,426,478 -->
+<g class="t">
+<text x="24" y="162">writable.close()</text><text x="24" y="178" class="m">sink close, stream.js</text>
+<text x="24" y="214">writable.abort()</text><text x="24" y="230" class="m">sink abort, stream.js</text>
+<text x="24" y="266">readable.cancel()</text><text x="24" y="282" class="m">source cancel, stream.js</text>
+<text x="24" y="318">FIN received and read to the end</text><text x="24" y="334" class="m">commitReadBuffer, stream.js</text>
+<text x="24" y="370">RESET_STREAM received</text><text x="24" y="386" class="m">onStreamRecvSignal, stream.js</text>
+<text x="24" y="422">STOP_SENDING received</text><text x="24" y="438" class="m">onStreamRecvSignal, stream.js</text>
+<text x="24" y="474">reset acknowledged after a local abort()</text><text x="24" y="490" class="m">onStreamNetworkFinish, stream.js:471</text>
+</g>
+
+<!-- grid lines -->
+<g class="line">
+<line x1="24" y1="140" x2="1228" y2="140"/><line x1="24" y1="192" x2="1228" y2="192"/><line x1="24" y1="244" x2="1228" y2="244"/><line x1="24" y1="296" x2="1228" y2="296"/><line x1="24" y1="348" x2="1228" y2="348"/><line x1="24" y1="400" x2="1228" y2="400"/><line x1="24" y1="452" x2="1228" y2="452"/><line x1="24" y1="504" x2="1228" y2="504"/>
+</g>
+
+<!-- dots: column centres 624,756,888,1020,1158 -->
+<g>
+<circle cx="624" cy="166" r="9" class="yes"/><circle cx="756" cy="166" r="9" class="yes"/><circle cx="1158" cy="166" r="9" class="no"/>
+<circle cx="624" cy="218" r="9" class="yes"/><circle cx="756" cy="218" r="9" class="yes"/><circle cx="1158" cy="218" r="9" class="no"/>
+<circle cx="888" cy="270" r="9" class="yes"/><circle cx="1020" cy="270" r="9" class="yes"/><circle cx="1158" cy="270" r="9" class="no"/>
+<circle cx="888" cy="322" r="9" class="yes"/><circle cx="1020" cy="322" r="9" class="yes"/><circle cx="1158" cy="322" r="9" class="no"/>
+<circle cx="888" cy="374" r="9" class="yes"/><circle cx="1020" cy="374" r="9" class="yes"/><circle cx="1158" cy="374" r="9" class="no"/>
+<circle cx="624" cy="426" r="9" class="yes"/><circle cx="756" cy="426" r="9" class="yes"/><circle cx="1158" cy="426" r="9" class="no"/>
+<circle cx="624" cy="478" r="9" class="yes"/><circle cx="756" cy="478" r="9" class="yes"/><circle cx="888" cy="478" r="9" class="yes"/><circle cx="1020" cy="478" r="9" class="yes"/><circle cx="1158" cy="478" r="9" class="yes"/>
+</g>
+
+<!-- 6d7c842 bracket over rows 0..2, note in the gap between labels and the matrix -->
+<path d="M 548 146 L 540 146 L 540 290 L 548 290" fill="none" stroke="#52514e" stroke-width="1.5"/>
+<text x="528" y="200" text-anchor="end" class="m">commit 6d7c842, 2025-12-13</text>
+<text x="528" y="216" text-anchor="end" class="m">"Remove streams on session,</text>
+<text x="528" y="232" text-anchor="end" class="m">if streams are closed"</text>
+<text x="528" y="248" text-anchor="end" class="m">added these six dots</text>
+<text x="528" y="264" text-anchor="end" class="m">and stopped at this column</text>
+<line x1="380" y1="270" x2="1132" y2="270" stroke="#52514e" stroke-width="1" stroke-dasharray="2 4" opacity=".0"/>
+
+<!-- graceful close marks on the right -->
+<rect x="1240" y="146" width="10" height="40" fill="#2a78d6" opacity=".3"/><rect x="1240" y="302" width="10" height="40" fill="#2a78d6" opacity=".3"/>
+<text x="1258" y="166" class="m">graceful close,</text><text x="1258" y="182" class="m">writable half</text>
+<text x="1258" y="322" class="m">graceful close,</text><text x="1258" y="338" class="m">readable half</text>
+
+<!-- fix outline around streamObjs column rows 0..5 -->
+<rect x="1142" y="148" width="32" height="296" rx="16" class="fix"/>
+<text x="1182" y="440" class="m" fill="#1baf7a">the patch</text>
+
+<text x="24" y="544" class="t"><tspan font-weight="600">Red ring:</tspan> the event closes one half of the stream and touches every Set except streamObjs. After writable.close() plus FIN both halves are done and the stream stays in streamObjs until the session closes.</text>
+<text x="24" y="566" class="t"><tspan font-weight="600">Blue dot in the last row:</tspan> the only removal from streamObjs in 1.6.7, reached only after a local writable.abort() and its acknowledgement.</text>
+<text x="24" y="588" class="t"><tspan font-weight="600">Green outline:</tspan> the patch. removeStreamObjIfFinished() runs at each of these six events and removes the stream once both halves are closed.</text>
+<text x="24" y="612" class="m">Not shown: session close clears all five Sets at once, which is why a short-lived session never shows this.</text>
+</svg>

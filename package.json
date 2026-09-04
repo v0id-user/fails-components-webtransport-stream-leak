@@ -1,0 +1,16 @@
+{
+  "name": "webtransport-stream-leak",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reproduction and fix for the per-stream leak in @fails-components/webtransport 1.6.7",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "repro": "node --expose-gc repro.mjs 8000",
+    "timeline": "node --expose-gc timeline.mjs 16000 250"
+  },
+  "dependencies": {
+    "@fails-components/webtransport": "1.6.7",
+    "@fails-components/webtransport-transport-http3-quiche": "1.6.7"
+  }
+}
