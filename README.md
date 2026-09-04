@@ -150,6 +150,13 @@ removeStreamObjIfFinished() {
 }
 ```
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/patch-flow-dark.png">
+  <img alt="where the patch calls removeStreamObjIfFinished, and when the stream leaves the Set" src="img/patch-flow.png">
+</picture>
+
+Where the patch calls it, and when the stream leaves the Set.
+
 and calls it at each of the six events that close a half: the writable's `close` and `abort` sinks, the readable's `cancel`, the FIN in `commitReadBuffer`, and both signals in `onStreamRecvSignal`. The stream leaves the Set when the second of its two halves closes. The patch also adds a test to `bidirectional-streams.spec.js`, one to `unidirectional-streams.spec.js`, and two echo paths to the test server that serve every stream of a session rather than only the first. On 1.6.7 both tests fail with `expected 10 to equal +0`; with the patch they pass.
 
 To apply the `lib/stream.js` hunk to the installed package:

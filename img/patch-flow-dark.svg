@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="740" height="790" viewBox="0 0 740 790" font-family="system-ui,-apple-system,'Segoe UI',sans-serif">
+<defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9198a1"/></marker></defs>
+<style>
+.h{font-size:16px;font-weight:600;fill:#e6edf3}.m{font-size:12px;fill:#9198a1;text-anchor:middle}.m2{font-size:12px;fill:#9198a1}
+.t{font-size:13px;font-weight:600;fill:#e6edf3}.c{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;fill:#9198a1}
+.g{fill:#161b22;stroke:#199e70;stroke-width:1.5}.g2{fill:#0f2e20;stroke:#199e70;stroke-width:2}
+.a{stroke:#9198a1;stroke-width:1.2}
+</style>
+<rect width="740" height="790" fill="#0d1117"/>
+<text x="40" y="34" class="h">with the patch</text>
+<rect x="40" y="52" width="660" height="52" rx="6" class="g"/>
+<text x="52" y="74" class="t">onStream(args) creates the stream</text>
+<text x="52" y="94" class="c">session.js:627  new HttpWTStream  session.js:634</text>
+<rect x="40" y="132" width="212" height="58" rx="6" class="g"/>
+<text x="52" y="154" class="t">streamObjs.add</text>
+<text x="52" y="174" class="c">session.js:643</text>
+<rect x="264" y="132" width="212" height="58" rx="6" class="g"/>
+<text x="276" y="154" class="t">receiveStreams + controller</text>
+<text x="276" y="174" class="c">stream.js:133  (constructor)</text>
+<rect x="488" y="132" width="212" height="58" rx="6" class="g"/>
+<text x="500" y="154" class="t">sendStreams + controller</text>
+<text x="500" y="174" class="c">stream.js:254  (constructor)</text>
+<line x1="146" y1="104" x2="146" y2="132" class="a" marker-end="url(#m)"/>
+<line x1="370" y1="104" x2="370" y2="132" class="a" marker-end="url(#m)"/>
+<line x1="594" y1="104" x2="594" y2="132" class="a" marker-end="url(#m)"/>
+<line x1="370" y1="190" x2="370" y2="204" class="a" marker-end="url(#m)"/>
+<text x="370" y="218" class="m">stream in use, then each half closes</text>
+<line x1="200" y1="228" x2="540" y2="228" class="a"/>
+<line x1="200" y1="228" x2="200" y2="250" class="a" marker-end="url(#m)"/>
+<line x1="540" y1="228" x2="540" y2="250" class="a" marker-end="url(#m)"/>
+<text x="40" y="242" class="m2">readable half</text>
+<text x="380" y="242" class="m2">writable half</text>
+<rect x="40" y="250" width="320" height="92" rx="6" class="g"/>
+<text x="52" y="272" class="t">readable.cancel()</text>
+<text x="52" y="292" class="c">stream.js:92</text>
+<text x="52" y="308" class="c">readableclosed :104</text>
+<text x="52" y="324" class="c">removeReceiveStream :105  IfFinished :109</text>
+<rect x="40" y="354" width="320" height="92" rx="6" class="g"/>
+<text x="52" y="376" class="t">RESET_STREAM received</text>
+<text x="52" y="396" class="c">onStreamRecvSignal stream.js:361</text>
+<text x="52" y="412" class="c">removeReceiveStream :365</text>
+<text x="52" y="428" class="c">readableclosed :370  IfFinished :413</text>
+<rect x="40" y="458" width="320" height="92" rx="6" class="g"/>
+<text x="52" y="480" class="t">FIN read to the end</text>
+<text x="52" y="500" class="c">commitReadBuffer stream.js:314</text>
+<text x="52" y="516" class="c">removeReceiveStream :324</text>
+<text x="52" y="532" class="c">readableclosed :331  IfFinished :337</text>
+<rect x="380" y="250" width="320" height="92" rx="6" class="g"/>
+<text x="392" y="272" class="t">STOP_SENDING received</text>
+<text x="392" y="292" class="c">onStreamRecvSignal stream.js:380</text>
+<text x="392" y="308" class="c">removeSendStream :383</text>
+<text x="392" y="324" class="c">writableclosed :388  IfFinished :413</text>
+<rect x="380" y="354" width="320" height="92" rx="6" class="g"/>
+<text x="392" y="376" class="t">writable.close()</text>
+<text x="392" y="396" class="c">stream.js:170  writableclosed :174</text>
+<text x="392" y="412" class="c">streamFinal :175</text>
+<text x="392" y="428" class="c">removeSendStream :176  IfFinished :181</text>
+<rect x="380" y="458" width="320" height="92" rx="6" class="g"/>
+<text x="392" y="480" class="t">writable.abort()</text>
+<text x="392" y="500" class="c">stream.js:186  writableclosed :193</text>
+<text x="392" y="516" class="c">removeSendStream :200</text>
+<text x="392" y="532" class="c">resetStream :209  IfFinished :206</text>
+<rect x="40" y="580" width="660" height="76" rx="6" class="g2"/>
+<text x="52" y="602" class="t">removeStreamObjIfFinished()  stream.js:344</text>
+<text x="52" y="622" class="c">readable open? return.  writable open? return.  removeStreamObj(this) :347</text>
+<text x="52" y="638" class="c">abort path :485 unchanged</text>
+<line x1="200" y1="550" x2="200" y2="580" class="a" marker-end="url(#m)"/>
+<line x1="540" y1="550" x2="540" y2="580" class="a" marker-end="url(#m)"/>
+<rect x="40" y="686" width="660" height="62" rx="6" class="g2"/>
+<text x="52" y="708" class="t">close() + FIN: leaves streamObjs at the second half</text>
+<text x="52" y="728" class="c">FIN after close  stream.js:337   close after FIN  stream.js:181</text>
+<line x1="370" y1="656" x2="370" y2="686" class="a" marker-end="url(#m)"/>
+</svg>
