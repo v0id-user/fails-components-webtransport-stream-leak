@@ -94,5 +94,17 @@ ${poly(1, '#36c')}${line(fh, '#36c')}
 <text x="${(L + W - R) / 2}" y="${H - 8}" text-anchor="middle" font-size="12">streams opened and closed</text>
 </svg>
 `)
+// The same chart on a near-black ground with light text, for dark colour schemes.
+const light = readFileSync('timeline.svg', 'utf8')
+const dark = light
+  .replace('>', '>
+<rect width="' + W + '" height="' + H + '" fill="#0d1117"/><style>text{fill:#e6edf3}</style>')
+  .replaceAll('background:#fff', 'background:#0d1117')
+  .replaceAll('stroke="#ddd"', 'stroke="#30363d"')
+  .replaceAll('stroke="#c33"', 'stroke="#e66767"')
+  .replaceAll('stroke="#36c"', 'stroke="#3987e5"')
+  .replaceAll('fill="#c33"', 'fill="#e6edf3"')
+  .replaceAll('fill="#36c"', 'fill="#e6edf3"')
+writeFileSync('timeline-dark.svg', dark)
 server.stopServer()
 process.exit(0)

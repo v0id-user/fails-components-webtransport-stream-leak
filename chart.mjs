@@ -30,6 +30,7 @@ const labels = (c) => series.map((s) => { const last = s.rows.at(-1); return `<c
 const legend = (c) => series.map((s, i) => `<g transform="translate(${L + i * 210},${T - 30})"><line x1="0" y1="0" x2="22" y2="0" stroke="${c[s.key]}" stroke-width="2"/><text x="28" y="4" class="label">${s.name}</text></g>`).join('')
 
 const LIGHT = { surface: '#fcfcfb', ink: '#0b0b0b', ink2: '#52514e', grid: '#e6e5e1', s1: '#2a78d6', s2: '#eb6834' }
+const DARK = { surface: '#0d1117', ink: '#e6edf3', ink2: '#9198a1', grid: '#30363d', s1: '#3987e5', s2: '#d95926' }
 const VARS = { surface: 'var(--surface)', ink: 'var(--ink)', ink2: 'var(--ink2)', grid: 'var(--gridc)', s1: 'var(--s1)', s2: 'var(--s2)' }
 const svg = (extra = '', c = VARS) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" class="viz" role="img" aria-label="Heap used against closed bidirectional streams, unpatched and patched">
 <style>
@@ -51,6 +52,7 @@ ${extra}
 </svg>`
 
 writeFileSync('heap.svg', svg('', LIGHT))
+writeFileSync('heap-dark.svg', svg('', DARK))
 
 const data = JSON.stringify(series.map((s) => ({ name: s.name, hex: s.hex, rows: s.rows })))
 const table = `<details><summary>Table view</summary><table><thead><tr><th>streams</th>${series.map((s) => `<th>${s.name}, heapUsed MB</th>`).join('')}</tr></thead><tbody>${series[0].rows.map((r, i) => `<tr><td>${r.x}</td>${series.map((s) => `<td>${(s.rows[i]?.y / MB).toFixed(1)}</td>`).join('')}</tr>`).join('')}</tbody></table></details>`
